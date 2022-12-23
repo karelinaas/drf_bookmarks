@@ -15,9 +15,10 @@ class BookmarkViewSet(mixins.CreateModelMixin,
     list_serializer_class = BookmarkMinimalSerializer
     detail_serializer_class = BookmarkDetailSerializer
 
-    # filter_backends = (OrderingFilter, DjangoFilterBackend)
-    # filter_class = BookmarkFilterSet TODO см как в новом джанго
-    # pagination_class = LinkHeaderPagination TODO какой??
+    # TODO сделать поиск по списку закладок (по URL, title), сортировку, пагинацию
+    # filter_backends = ...
+    # filter_class = ...
+    # pagination_class = ...
 
     def get_serializer_class(self):
         if self.action == 'list':
