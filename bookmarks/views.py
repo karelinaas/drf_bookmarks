@@ -1,17 +1,18 @@
-from rest_framework.generics import RetrieveDestroyAPIView
-from rest_framework.mixins import CreateModelMixin
+from rest_framework import mixins
 from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.viewsets import GenericViewSet
 
 from .models import Bookmark
-from .serializers import BookmarkDetailSerializer, BookmarkListSerializer
+from .serializers import BookmarkDetailSerializer, BookmarkMinimalSerializer
 
 
-class BookmarkViewSet(CreateModelMixin,
-                      RetrieveDestroyAPIView,
+class BookmarkViewSet(mixins.CreateModelMixin,
+                      mixins.DestroyModelMixin,
+                      mixins.ListModelMixin,
+                      mixins.RetrieveModelMixin,
                       GenericViewSet):
     queryset = Bookmark.objects.filter(time_deleted__isnull=True)
-    list_serializer_class = BookmarkListSerializer
+    list_serializer_class = BookmarkMinimalSerializer
     detail_serializer_class = BookmarkDetailSerializer
 
     # filter_backends = (OrderingFilter, DjangoFilterBackend)
@@ -28,3 +29,4 @@ class BookmarkViewSet(CreateModelMixin,
             return AllowAny(),
         if self.action == 'destroy':
             return IsAdminUser(),
+        return {}
