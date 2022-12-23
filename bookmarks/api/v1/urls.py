@@ -7,8 +7,6 @@ from ... import views
 router = DefaultRouter()
 router.register(r'bookmarks', views.BookmarkViewSet)
 
-# TODO auth, см проект из практикума
-# TODO поч в1?
 urlpatterns = [
-    url('v1/', include(router.urls)),
+    url('', include(router.urls)),
 ]
