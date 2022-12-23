@@ -1,9 +1,8 @@
 import requests
-from bs4 import BeautifulSoup
-from django.utils.timezone import now
 from rest_framework import fields
 from rest_framework.serializers import ModelSerializer, ValidationError
 
+from .helpers import BookmarkInfoHelper
 from .models import Bookmark
 
 
@@ -39,15 +38,5 @@ class BookmarkDetailSerializer(ModelSerializer):
         return value
 
     def create(self, validated_data):
-        soup = BeautifulSoup(self.__response__.text)
-
-        favicon = soup.find('link', rel='shortcut icon')
-        title = soup.find('title')
-        description = soup.find('meta', property='og:description')
-
-        return Bookmark.objects.create(
-            favicon=favicon.get('href') if favicon else None,
-            url=validated_data['url'],
-            title=title.text if title else f'Закладка от {now()}',
-            description=description['content'] if description else None,
-        )
+        bookmark_data = BookmarkInfoHelper(self.__response__.text, validated_data['url']).get_info()
+        return Bookmark.objects.create(**bookmark_data)
