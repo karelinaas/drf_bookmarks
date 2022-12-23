@@ -25,7 +25,7 @@ class BookmarkDetailSerializer(ModelSerializer):
         fields = ('id', 'time_created', 'favicon', 'url', 'title', 'description')
 
     def validate_url(self, value):
-        if Bookmark.objects.filter(url=value, time_deleted__isnull=False).exists():
+        if Bookmark.objects.filter(url=value, time_deleted__isnull=True).exists():
             raise ValidationError('Закладка с таким URL уже существует.')
 
         try:
