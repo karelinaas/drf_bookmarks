@@ -58,7 +58,7 @@ class BookmarkInfoHelper:
 
         return None
 
-    def __get_title(self) -> Optional[str]:
+    def __get_title(self) -> str:
         """
         Получаем название страницы, нам нужно внутреннее содержимое тэга.
         Если не удастся получить, вернем заглушку.
