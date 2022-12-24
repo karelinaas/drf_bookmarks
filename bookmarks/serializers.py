@@ -14,22 +14,19 @@ class BookmarkMinimalSerializer(ModelSerializer):
 
 
 class BookmarkDetailSerializer(ModelSerializer):
-    time_created = fields.DateTimeField(read_only=True)
     url = fields.URLField(validators=[UniqueValidator(queryset=Bookmark.objects.filter(time_deleted__isnull=True))])
-    favicon = fields.URLField(read_only=True)
-    title = fields.CharField(read_only=True)
-    description = fields.CharField(read_only=True)
 
-    __response__: requests.Response = None
+    __response: requests.Response = None
 
     class Meta:
         model = Bookmark
         fields = ('id', 'time_created', 'favicon', 'url', 'title', 'description')
+        read_only_fields = ('time_created', 'favicon', 'title', 'description')
 
     def validate_url(self, value):
         try:
-            self.__response__ = requests.get(value)
-            if not self.__response__.ok:
+            self.__response = requests.get(value)
+            if not self.__response.ok:
                 raise Exception
         except Exception:
             raise ValidationError('URL, который вы ввели, не открывается. Возможно, он не является публичным?')
@@ -37,5 +34,5 @@ class BookmarkDetailSerializer(ModelSerializer):
         return value
 
     def create(self, validated_data):
-        bookmark_data = BookmarkInfoHelper(self.__response__.text, validated_data['url']).get_info()
+        bookmark_data = BookmarkInfoHelper(self.__response.text, validated_data['url']).get_info()
         return Bookmark.objects.create(**bookmark_data)

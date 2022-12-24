@@ -30,13 +30,13 @@ class BookmarkInfoHelper:
     ]
 
     def __init__(self, html: str, url: str):
-        self.soup = BeautifulSoup(html)
-        self.url = url
+        self.__soup = BeautifulSoup(html)
+        self.__url = url
 
     def get_info(self) -> dict:
         return {
             'favicon': self.__get_favicon(),
-            'url': self.url,
+            'url': self.__url,
             'title': self.__get_title(),
             'description': self.__get_description(),
         }
@@ -51,7 +51,7 @@ class BookmarkInfoHelper:
 
             # у фавиконки может быть относительный путь, тогда нужно приклеить к нему домен
             if favicon_href and favicon_href.find('http') == -1 and favicon_href.find('//') == -1:
-                domain = urlparse(self.url).netloc
+                domain = urlparse(self.__url).netloc
                 return f'//{domain}/{favicon_href}'
 
             return favicon_href
@@ -83,7 +83,7 @@ class BookmarkInfoHelper:
         Перебирает варианты, пока не найдет тэг.
         """
         for params_list in tag_params:
-            tag = self.soup.find(params_list[0], params_list[1])
+            tag = self.__soup.find(params_list[0], params_list[1])
             if tag:
                 return tag
         return None
