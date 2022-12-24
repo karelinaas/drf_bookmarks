@@ -1,6 +1,7 @@
 import requests
 from rest_framework import fields
 from rest_framework.serializers import ModelSerializer, ValidationError
+from rest_framework.validators import UniqueValidator
 
 from .helpers import BookmarkInfoHelper
 from .models import Bookmark
@@ -14,6 +15,7 @@ class BookmarkMinimalSerializer(ModelSerializer):
 
 class BookmarkDetailSerializer(ModelSerializer):
     time_created = fields.DateTimeField(read_only=True)
+    url = fields.URLField(validators=[UniqueValidator(queryset=Bookmark.objects.filter(time_deleted__isnull=True))])
     favicon = fields.URLField(read_only=True)
     title = fields.CharField(read_only=True)
     description = fields.CharField(read_only=True)
@@ -25,9 +27,6 @@ class BookmarkDetailSerializer(ModelSerializer):
         fields = ('id', 'time_created', 'favicon', 'url', 'title', 'description')
 
     def validate_url(self, value):
-        if Bookmark.objects.filter(url=value, time_deleted__isnull=True).exists():
-            raise ValidationError('Закладка с таким URL уже существует.')
-
         try:
             self.__response__ = requests.get(value)
             if not self.__response__.ok:
