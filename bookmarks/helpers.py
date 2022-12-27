@@ -14,23 +14,23 @@ class BookmarkInfoHelper:
     # параметры тэгов с фавиконкой, названием, описание
     # обычно фавиконка это тэг <link> с атрибутом rel="shortcut icon" или rel="icon"
     FAVICON_TAG_PARAMS = [
-        ['link', {'rel': 'shortcut icon'}],
-        ['link', {'rel': 'icon'}],
+        ('link', {'rel': 'shortcut icon'}),
+        ('link', {'rel': 'icon'}),
     ]
 
     # обычно название страницы это тэг <title>
     TITLE_TAG_PARAMS = [
-        ['title', dict()],
+        ('title', ),
     ]
 
     # обычно описание страницы это тэг <meta> с атрибутами name="description" или property="og:description"
     DESCRIPTION_TAG_PARAMS = [
-        ['meta', {'name': 'description'}],
-        ['meta', {'property': 'og:description'}],
+        ('meta', {'name': 'description'}),
+        ('meta', {'property': 'og:description'}),
     ]
 
     def __init__(self, html: str, url: str):
-        self.__soup = BeautifulSoup(html)
+        self.__soup = BeautifulSoup(html, features='html.parser')
         self.__url = url
 
     def get_info(self) -> dict:
@@ -82,8 +82,8 @@ class BookmarkInfoHelper:
         Метод для получения любого тэга по параметрам.
         Перебирает варианты, пока не найдет тэг.
         """
-        for params_list in tag_params:
-            tag = self.__soup.find(params_list[0], params_list[1])
+        for params in tag_params:
+            tag = self.__soup.find(*params)
             if tag:
                 return tag
         return None

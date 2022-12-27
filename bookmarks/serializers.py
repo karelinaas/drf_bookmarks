@@ -31,6 +31,8 @@ class BookmarkDetailSerializer(ModelSerializer):
         except Exception:
             raise ValidationError('URL, который вы ввели, не открывается. Возможно, он не является публичным?')
 
+        self.__response.encoding = 'utf-8'
+
         return value
 
     def create(self, validated_data):
