@@ -1,5 +1,4 @@
-from rest_framework import filters, mixins
-from rest_framework.pagination import PageNumberPagination
+from rest_framework import mixins
 from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.viewsets import GenericViewSet
 
@@ -16,10 +15,11 @@ class BookmarkViewSet(mixins.CreateModelMixin,
     list_serializer_class = BookmarkMinimalSerializer
     detail_serializer_class = BookmarkDetailSerializer
 
-    filter_backends = [filters.OrderingFilter, filters.SearchFilter]
-    ordering_fields = ['id', 'time_created', 'url', 'title']
-    search_fields = ['url', 'title']
-    pagination_class = PageNumberPagination
+    # TODO сделать поиск по списку закладок (по URL, title), сортировку, пагинацию
+    # filter_backends = ...
+    # ordering_fields  = ...
+    # ...
+    # pagination_class = ...
 
     def get_serializer_class(self):
         if self.action == 'list':
