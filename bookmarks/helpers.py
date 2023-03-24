@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Union
 from urllib.parse import urlparse
 
 from bs4 import BeautifulSoup
@@ -10,30 +10,32 @@ class BookmarkInfoHelper:
     """
     Хэлпер для работы с html-страницами: извлекает из страницы ее фавиконку, название, описание.
     """
+    __url: str
+    __soup: BeautifulSoup
 
     # параметры тэгов с фавиконкой, названием, описание
     # обычно фавиконка это тэг <link> с атрибутом rel="shortcut icon" или rel="icon"
-    FAVICON_TAG_PARAMS = [
+    FAVICON_TAG_PARAMS = (
         ('link', {'rel': 'shortcut icon'}),
         ('link', {'rel': 'icon'}),
-    ]
+    )
 
     # обычно название страницы это тэг <title>
-    TITLE_TAG_PARAMS = [
+    TITLE_TAG_PARAMS = (
         ('title', ),
-    ]
+    )
 
     # обычно описание страницы это тэг <meta> с атрибутами name="description" или property="og:description"
-    DESCRIPTION_TAG_PARAMS = [
+    DESCRIPTION_TAG_PARAMS = (
         ('meta', {'name': 'description'}),
         ('meta', {'property': 'og:description'}),
-    ]
+    )
 
     def __init__(self, html: str, url: str):
         self.__soup = BeautifulSoup(html, features='html.parser')
         self.__url = url
 
-    def get_info(self) -> dict:
+    def get_info(self) -> dict[str, Optional[str]]:
         return {
             'favicon': self.__get_favicon(),
             'url': self.__url,
@@ -77,7 +79,7 @@ class BookmarkInfoHelper:
             return description_tag.get('content')
         return None
 
-    def __get_tag(self, tag_params: list) -> Optional[Tag]:
+    def __get_tag(self, tag_params: tuple[tuple[Union[str, dict[str, str]]]]) -> Optional[Tag]:
         """
         Метод для получения любого тэга по параметрам.
         Перебирает варианты, пока не найдет тэг.
