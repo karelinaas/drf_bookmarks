@@ -1,5 +1,6 @@
 Django==3.2
-djangorestframework==3.12.4
-requests==2.25.1
-beautifulsoup4==4.11.1
 django-filter==22.1
+djangorestframework==3.12.4
+beautifulsoup4==4.11.1
+psycopg2-binary==2.9.5
+requests==2.25.1

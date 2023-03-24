@@ -12,7 +12,7 @@ class BookmarkViewSet(mixins.CreateModelMixin,
                       mixins.ListModelMixin,
                       mixins.RetrieveModelMixin,
                       GenericViewSet):
-    queryset = Bookmark.objects.filter(time_deleted__isnull=True)
+    queryset = Bookmark.objects.filter(time_deleted__isnull=True).order_by('-time_created')
     list_serializer_class = BookmarkMinimalSerializer
     detail_serializer_class = BookmarkDetailSerializer
 
