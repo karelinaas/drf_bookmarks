@@ -18,8 +18,8 @@ class BaseORMTestCase(TestCase):
         ),
     ]
 
-    def setUp(self) -> None:
-        super().setUp()
+    @classmethod
+    def setUpTestData(cls) -> None:
         group_title_pk_map = create_parent_model_test_data(
             model=Group,
             filename='bookmarks/tests/resources/groups.csv',
