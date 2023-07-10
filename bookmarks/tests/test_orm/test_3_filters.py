@@ -1,0 +1,36 @@
+from unittest import TestCase
+
+
+class TestFilters(TestCase):
+    def test_simple_filters(self):
+        ...
+
+    def test_string_filters(self):
+        ...
+
+    def test_date_filters(self):
+        ...
+
+    def test_exclude(self):
+        ...
+
+    def test_less_greater_etc_filters(self):
+        ...
+
+    def test_many_filters(self):
+        ...
+
+    def test_filter_values(self):
+        ...
+
+    def test_get_list_or_404(self):
+        ...
+
+    def test_filters_first(self):
+        ...
+
+    def test_filters_last(self):
+        ...
+
+    def test_exists(self):
+        ...
