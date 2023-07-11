@@ -15,4 +15,4 @@ jobs:
 
     - name: Test with autotests
       run: |
-        docker-compose run --rm --entrypoint "bash -c 'python3 manage.py test .'" web
+        cd infra && docker-compose run --rm --entrypoint "bash -c 'python3 manage.py test .'" web
