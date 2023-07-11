@@ -11,7 +11,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Build the Docker image
-      run: docker-compose up -d
+      run: cd infra && docker-compose up -d
 
     - name: Test with autotests
       run: |
