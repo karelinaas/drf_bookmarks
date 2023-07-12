@@ -11,8 +11,8 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Build the Docker image
-      run: cd infra && docker-compose up -d
+      run: docker-compose -f ../../infra/docker-compose.yml up -d
 
     - name: Test with autotests
       run: |
-        cd infra && docker-compose run --rm --entrypoint "bash -c 'python3 manage.py test .'" web
+        docker-compose -f ../../infra/docker-compose.yml run --rm --entrypoint "bash -c 'python manage.py test'" web
