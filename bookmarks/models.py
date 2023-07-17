@@ -14,7 +14,12 @@ class Bookmark(models.Model):
     url = models.URLField(verbose_name='URL')
     title = models.CharField(max_length=255)
     description = models.CharField(null=True, max_length=255)
-    group = models.ForeignKey(to=Group, null=True, on_delete=models.SET_NULL)
+    group = models.ForeignKey(
+        to=Group,
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name='bookmarks',
+    )
 
     class Meta:
         constraints = [

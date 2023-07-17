@@ -2,7 +2,7 @@ from django.db import models
 from django.db.models.functions import Concat
 
 from .base import BaseORMTestCase
-from ...models import Group, Bookmark
+from ...models import Group
 
 
 class TestAnnotate(BaseORMTestCase):
