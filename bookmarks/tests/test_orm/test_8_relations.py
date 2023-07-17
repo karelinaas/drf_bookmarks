@@ -19,3 +19,7 @@ class TestRelations(TestCase):
 
     def test_filter_by_related_fields(self):
         ...
+
+
+# agregate related, like Author.objects.annotate(total_pages=Sum("book__pages"))
+# F !!!!!!!
