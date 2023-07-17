@@ -15,6 +15,7 @@ class TestSelect(BaseORMTestCase):
 
         # Соберём все названия закладок, сравним списки
         bookmark_titles = [bookmark.title for bookmark in all_bookmarks]
+        print(bookmark_titles)
         self.assertEquals(self.BOOKMARK_TITLES, bookmark_titles)
 
     def test_count(self):
@@ -33,6 +34,8 @@ class TestSelect(BaseORMTestCase):
         # Последняя запись в выборке
         all_bookmarks = Bookmark.objects.all()
 
+        print(all_bookmarks.query)
+
         self.assertEquals(all_bookmarks.last(), all_bookmarks[6])
 
         # Без ORDER BY результат непредсказуем
@@ -48,7 +51,7 @@ class TestSelect(BaseORMTestCase):
         # Существующая запись
         bookmark = get_object_or_404(
             Bookmark,
-            'Торт Наполеон в домашних условиях, пошаговый рецепт с фото на 382 ккал',
+            title='Торт Наполеон в домашних условиях, пошаговый рецепт с фото на 382 ккал',
         )
         # Проверим по полю description
         self.assertEquals((
@@ -77,9 +80,12 @@ class TestSelect(BaseORMTestCase):
         for bm_fields_tuple in bookmark_titles:
             self.assertIn(bm_fields_tuple[0], self.BOOKMARK_TITLES)
 
+        print(bookmark_titles)
+
         # Получим плоский список (можно выбрать только 1 поле)
         bookmark_titles = Bookmark.objects.all().values_list('title', flat=True)
         self.assertEquals(self.BOOKMARK_TITLES, list(bookmark_titles))
+        print(bookmark_titles)
 
     def test_order_by(self):
         # Выборка всех закладок из таблицы в упорядоченном виде

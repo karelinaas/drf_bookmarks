@@ -27,12 +27,12 @@ class TestRelations(BaseORMTestCase):
         self.assertIn('Моё обучение – Stepik', bookmark_titles)
 
     def test_filter_related(self):
-        # Можно фильтровать связанные модели
+        # Можно фильтровать связанные модели, применять к ним values()
         group = Group.objects.get(pk=1)
 
         bookmark_titles = group.bookmarks.filter(title__startswith='Я').values_list('title', flat=True)
 
-        self.assertIn('Яндекс Практикум', bookmark_titles)
+        self.assertEquals('Яндекс Практикум', bookmark_titles[0])
         # (а также упорядочивать и т. д.)
 
     def test_filter_by_related_fields(self):
@@ -41,7 +41,7 @@ class TestRelations(BaseORMTestCase):
             group__name__in=['Полезное', 'Важное']
         ).values_list('title', flat=True)
 
-        self.assertIn('Gmail', bookmark_titles)
+        self.assertEquals('Gmail', bookmark_titles[0])
 
     def test_relations_f(self):
         bookmarks = Bookmark.objects.annotate(

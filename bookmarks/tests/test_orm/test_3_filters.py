@@ -58,18 +58,19 @@ class TestFilters(BaseORMTestCase):
         # Т.к. все закладки были созданы сегодня,
         # во всех случаях получим полный их список
         for bookmark_queryset in bookmark_querysets:
-            self.assertEquals(7, bookmark_queryset.count(), bookmark_queryset.count())
+            self.assertEquals(7, bookmark_queryset.count())
 
     def test_exclude(self):
         # Получим все закладки с буквой "м" в названии
         # Исключим 'Яндекс Практикум'
         bookmark_titles = Bookmark.objects.filter(
-            title__icontains='м',
+            title__contains='м',
         ).exclude(
             title='Яндекс Практикум',
         ).values_list('title', flat=True)
 
-        self.assertEquals(len(bookmark_titles), 3)
+        self.assertEquals(3, bookmark_titles.count())
+
         self.assertIn(
             'Торт Наполеон в домашних условиях, пошаговый рецепт с фото на 382 ккал',
             bookmark_titles

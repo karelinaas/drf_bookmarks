@@ -1,3 +1,6 @@
+from django.db import models
+from django.db.models.functions import Length
+
 from .base import BaseORMTestCase
 from ...models import Bookmark, Group
 
@@ -22,7 +25,10 @@ class TestBulkOperations(BaseORMTestCase):
 
         # Проверим на существование новые группы
         for group_data in new_groups_data:
-            self.assertTrue(Group.objects.filter(name=group_data[0], order=group_data[1]).exists())
+            self.assertTrue(Group.objects.filter(
+                name=group_data[0],
+                order=group_data[1],
+            ))
 
     def test_bulk_update(self):
         # Хотим "почистить" данные закладок:
@@ -53,6 +59,53 @@ class TestBulkOperations(BaseORMTestCase):
 
         # Кстати, для оптимизации можно было сразу выбрать только закладки, нуждающиеся в обновлении))
         # Подумайте, как =)
+        self.assertEquals(5, len(bookmarks_to_update))
+
+        Bookmark.objects.bulk_update(
+            bookmarks_to_update,
+            fields=('url', 'title', 'description',),
+        )
+
+        # Проверим на существование обновленные закладки
+        self.assertTrue(Bookmark.objects.filter(title='Торт Наполеон в домашних ус...').exists())
+        self.assertTrue(Bookmark.objects.filter(
+            title='Три рецепта «Оливье»: класс...',
+            description='Закладка из группы "Рецепты"',
+        ).exists())
+        self.assertTrue(Bookmark.objects.filter(title='Апероль шприц. Состав, пров...').exists())
+        self.assertTrue(Bookmark.objects.filter(url='https://mail.google.com/mail/u/0/').exists())
+        self.assertTrue(Bookmark.objects.filter(title='Обои флизелиновые Аспект Ру...').exists())
+
+    def test_bulk_update_optimized(self):
+        # Хотим "почистить" данные закладок:
+        # - удалить get-параметры из URL,
+        # - сократить названия до 30 симв. макс.,
+        # - написать дефолтное описание, если его нет.
+
+        bookmarks = Bookmark.objects.select_related('group').annotate(
+            title_len=Length('title')
+        ).filter(
+            models.Q(url__contains='?') |
+            models.Q(description__isnull=True) |
+            models.Q(title_len__gt=30),
+        )
+
+        bookmarks_to_update = []
+
+        for bookmark in bookmarks:
+            if '?' in bookmark.url:
+                bookmark.url = bookmark.url.split('?')[0]
+
+            if len(bookmark.title) > 30:
+                bookmark.title = f'{bookmark.title[:27]}...'
+
+            if not bookmark.description:
+                bookmark.description = f'Закладка из группы "{bookmark.group.name}"'
+
+            bookmarks_to_update.append(bookmark)
+
+
+        self.assertEquals(5, len(bookmarks))
         self.assertEquals(5, len(bookmarks_to_update))
 
         Bookmark.objects.bulk_update(

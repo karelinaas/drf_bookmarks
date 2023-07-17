@@ -6,6 +6,7 @@ from ...models import Bookmark
 
 class TestF(BaseORMTestCase):
     def test_f(self):
+        # URL != title
         bookmarks = Bookmark.objects.filter(
             ~Q(url=F('title'))
         )
