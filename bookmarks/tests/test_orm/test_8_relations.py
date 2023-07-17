@@ -21,5 +21,11 @@ class TestRelations(TestCase):
         ...
 
 
+    # def test_aggregating_annotations(self):
+    #     groups = Bookmark.objects.annotate(group_cnt=models.Count('group'))
+    #
+    #     for g in groups:
+    #         print(g.group_cnt)
+
 # agregate related, like Author.objects.annotate(total_pages=Sum("book__pages"))
 # F !!!!!!!
