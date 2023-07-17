@@ -42,11 +42,14 @@ class TestSelect(BaseORMTestCase):
         # По ID
         self.assertIsNotNone(Bookmark.objects.get(pk=2))
         # По другому полю - уникальность!
-        self.assertIsNotNone(Bookmark.objects.get(title=self.BOOKMARK_TITLES[0]))
+        self.assertIsNotNone(Bookmark.objects.get(title='Яндекс Практикум'))
 
     def test_get_object_or_404(self):
         # Существующая запись
-        bookmark = get_object_or_404(Bookmark, title=self.BOOKMARK_TITLES[2])
+        bookmark = get_object_or_404(
+            Bookmark,
+            'Торт Наполеон в домашних условиях, пошаговый рецепт с фото на 382 ккал',
+        )
         # Проверим по полю description
         self.assertEquals((
             'Торт Наполеон в домашних условиях. Вкусный рецепт приготовления с пошаговым описанием на 382 ккал, '
@@ -83,13 +86,23 @@ class TestSelect(BaseORMTestCase):
         all_bookmarks = Bookmark.objects.all().order_by('title')
 
         # С ORDER BY мы уже можем предположить, что получим в .first() / .last()
-        self.assertEquals(self.BOOKMARK_TITLES[5], all_bookmarks.first().title)
-        self.assertEquals(self.BOOKMARK_TITLES[0], all_bookmarks.last().title)
+        self.assertEquals('Gmail', all_bookmarks.first().title)
+        self.assertEquals('Яндекс Практикум', all_bookmarks.last().title)
+
+        print(all_bookmarks)
 
     def test_offset_limit(self):
         # OFFSET 4, LIMIT 2
         # [offset:offset+limit]
         bookmarks = Bookmark.objects.all().order_by('title')[4:6]
 
-        self.assertEquals(self.BOOKMARK_TITLES[2], bookmarks[0].title)
-        self.assertEquals(self.BOOKMARK_TITLES[3], bookmarks[1].title)
+        self.assertEquals(
+            'Торт Наполеон в домашних условиях, пошаговый рецепт с фото на 382 ккал',
+            bookmarks[0].title
+        )
+        self.assertEquals(
+            'Три рецепта «Оливье»: классический, советский и современный - РИА Новости, 11.12.2019',
+            bookmarks[1].title
+        )
+
+        print(bookmarks)

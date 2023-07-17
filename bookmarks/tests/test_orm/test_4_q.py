@@ -1,5 +1,7 @@
 from unittest import TestCase
 
+from django.db.models import Q
+
 
 class TestQ(TestCase):
     def test_q_and(self):
