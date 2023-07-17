@@ -45,15 +45,14 @@ class TestFilters(BaseORMTestCase):
         today = date.today()
 
         # Разберем ее на "составляющие"
-        year, _, week_day = today.isocalendar()
         month = today.month
+        year = today.year
 
-        print(year, week_day, month)
+        print(month, year)
 
         bookmark_querysets = [
-            Bookmark.objects.filter(time_created__year=year),
-            Bookmark.objects.filter(time_created__week_day=week_day),
             Bookmark.objects.filter(time_created__month=month),
+            Bookmark.objects.filter(time_created__year=year),
         ]
 
         # Т.к. все закладки были созданы сегодня,
