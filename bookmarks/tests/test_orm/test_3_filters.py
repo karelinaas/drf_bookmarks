@@ -1,10 +1,10 @@
 from datetime import date, datetime
 
+from django.http import Http404
 from django.shortcuts import get_list_or_404
 
-from bookmarks.models import Bookmark, Group
-from bookmarks.tests.test_orm.base import BaseORMTestCase
-from django.http import Http404
+from ...models import Bookmark, Group
+from .base import BaseORMTestCase
 
 
 class TestFilters(BaseORMTestCase):

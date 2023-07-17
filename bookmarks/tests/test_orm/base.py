@@ -5,7 +5,6 @@ from ...models import Bookmark, Group
 
 
 class BaseORMTestCase(TestCase):
-    # TODO minina это где еще нужно?
     BOOKMARK_TITLES = [
         'Яндекс Практикум',
         'Моё обучение – Stepik',
