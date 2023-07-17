@@ -1,6 +1,8 @@
 from django.db import models
 from django.utils.timezone import now
 
+from .managers import BookmarkManager
+
 
 class Group(models.Model):
     name = models.CharField(max_length=255, unique=True)
@@ -20,6 +22,8 @@ class Bookmark(models.Model):
         on_delete=models.SET_NULL,
         related_name='bookmarks',
     )
+
+    objects = BookmarkManager()
 
     class Meta:
         constraints = [
