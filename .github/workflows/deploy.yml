@@ -1,0 +1,57 @@
+name: Deploy to PythonAnywhere (version for PIP)
+
+on:  # В этом разделе прописываем, в каких случаях выполняется этот экшен
+  push:  # В нашем -- на пуш...
+    branches: [ master ]  # в ветку master (или тут можно указать main, в зависимости от твоего репозитория)
+  pull_request:  # А также -- если пулл-реквест...
+    types: [ closed ]  # был закрыт (принят, залит)
+    branches: [ master ]  # в ветку master
+
+# Ниже описываем сами действия -- джобы
+jobs:
+  deploy:  # Условное название джобы
+    # Условие, при котором джоба выполняется:
+    # если пулл-реквест залит ИЛИ был сделан пуш
+    if: github.event.pull_request.merged == true || github.event_name == 'push'
+    # Прописываем, что для выполнения джобы нам надо создать вирт. машинку с Убунту последней версии
+    runs-on: ubuntu-latest
+    
+    # Ниже описываем шаги этой джобы, у каждой можно указать название - name
+    steps:
+    # Этот шаг отвечает за клонирование нашего репо в вирт. среду GitHub Actions 
+    # перед выполнением остальных команд
+    - name: Checkout code
+      uses: actions/checkout@v2
+      
+    # Шаг установки питона в вирт. среду GitHub Actions
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.10'  # та же версия, что на PythonAnywhere !!!
+    
+    # Шаг установки зависимостей
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        
+    # Здесь могут быть другие шаги, напр., выполнение тестов, но нам это пока не актуально.
+    # - name: Run tests
+    #  run: |
+    #    python manage.py test
+        
+    # Шаг деплоя на PythonAnywhere
+    - name: Deploy to PythonAnywhere
+      env:
+        PA_USERNAME: ${{ secrets.PA_USERNAME }}
+        PA_API_TOKEN: ${{ secrets.PA_API_TOKEN }}
+        PA_APP_NAME: ${{ secrets.PA_APP_NAME }}
+      # Устанавливаем зависимости для работы с API PythonAnywhere
+      # Создаем скрипт для деплоя
+      run: |
+        pip install pythonanywhere
+        echo "from pythonanywhere.api import PythonAnywhere
+        pa = PythonAnywhere('$PA_USERNAME', '$PA_API_TOKEN')
+        pa.reload_webapp('$PA_APP_NAME')" > deploy.py
+        
+        python deploy.py
