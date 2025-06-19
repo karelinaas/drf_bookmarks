@@ -41,16 +41,11 @@ jobs:
     #    python manage.py test
         
     # Шаг деплоя на PythonAnywhere
+    # Тут используем чужой готовый action-скрипт и наши переменные
     - name: Deploy to PythonAnywhere
-      env:
-        PA_USERNAME: ${{ secrets.PA_USERNAME }}
-        PA_API_TOKEN: ${{ secrets.PA_API_TOKEN }}
-        PA_APP_NAME: ${{ secrets.PA_APP_NAME }}
-      # Устанавливаем curl для отправки API-запросов
-      # Отправляем запрос на перезагрузку через PythonAnywhere API
-      run: |
-        sudo apt-get update && sudo apt-get install -y curl
-        
-        curl -X POST \
-        -H "Authorization: Token $PA_API_TOKEN" \
-        "https://www.pythonanywhere.com/api/v0/user/$PA_USERNAME/webapps/$PA_APP_NAME/reload/"
+      uses: umuttopalak/pythonanywhere-deploy-action@v1.1.0
+      with:
+        host: 'www.pythonanywhere.com'
+        username: ${{ secrets.PA_USERNAME }}
+        api_token: ${{ secrets.PA_API_TOKEN }}
+        domain_name: ${{ secrets.PA_APP_NAME }}
