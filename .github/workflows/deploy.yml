@@ -46,6 +46,6 @@ jobs:
       uses: umuttopalak/pythonanywhere-deploy-action@v1.1.0
       with:
         host: 'www.pythonanywhere.com'
-        username: '${{ secrets.PA_USERNAME }}'
-        api_token: '${{ secrets.PA_API_TOKEN }}'
-        domain_name: '${{ secrets.PA_APP_NAME }}'
+        username: ${{ secrets.PA_USERNAME }}
+        api_token: ${{ secrets.PA_API_TOKEN }}
+        domain_name: ${{ secrets.PA_APP_NAME }}
